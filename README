@@ -1,0 +1,67 @@
+      RailsFrame
+
+   A Deployment and Virtualization Framework
+
+(Most of this is still speculative.  The Angelbox project is building
+toward it).
+
+RailsFrame is an attempt to bring the magic of modern virtualization
+and machine configuration to simple Rails apps with minimal fuss and
+without compromising how easy it is to deploy your application.
+
+RailsFrame is closely based on Vagrant, a library to create a small
+virtualized machine for your app and get things running on it.
+
+Unfortunately, Vagrant is pretty agnostic about what *kind* of app
+you're running.  So you need to add a provisioning system (in this
+case, Chef) to configure the machine properly with a web server and
+whatnot for your Rails app.  In many cases, you'll have more specific
+requirements as well -- a Juggernaut app will require Redis and
+Node.js, for instance.
+
+RailsFrame is a good-to-go framework (a.k.a. opinionated and
+batteries-included) that installs Rails and a selection of nicely
+tuned support components (NginX, Passenger, MySQL, BluePill and so
+on).  It also makes a number of similar components available in case
+you wish to use them, like the aforementioned Redis and Node.js.
+
+RailsFrame consists of a number of components in simultaneous
+development.  Here, look:
+
+        --------------------------------------
+        Rails App | Sinatra app | Frame App
+        ---------------------------------------
+                   Vagrant/Chef
+        ---------------------------------------
+          Angelbox - standard Rails cookbooks
+        ---------------------------------------
+
+Note that you can use standard Rails and Sinatra apps, or more other
+things, with a bit of work and the right cookbooks.  However,
+RailsFrame is designed to be a great little Rails box, and so those
+are the baked-right-in components that you can easily specify.
+
+You can customize your VagrantFile and Chef cookbooks to support your
+various Rails and other apps.  Anything with a Gemfile is even easier
+to support - RailsFrame will install all the gems, naturally.  But the
+real power is when you create a RailsFrame-specific app.
+
+A RailsFrame app is essentially an app using a custom Rails
+distribution (thanks to Tom Enebo for the terminology!).  Serious
+developers are already using RSpec, Cucumber, Factory_Girl,
+Database_Cleaner, Decent_Exposure, HAML, SASS and many other standard
+gems.  You can copy your Gemfile every time, mess with the directory
+structure, add a few config files, fix up your scaffolds (if you use
+them) and so on.  Or you can use a RailsFrame app, which is already
+nicely set up with all of these.  Of course, it's a Rails 3 app, so you
+can change back (or to something new) any time you want.
+
+A RailsFrame app *also* sports a Cookbooks directory.  So if you're
+using Juggernaut, you can reference the Redis and Node.js cookbooks
+directly rather than having to add them to your root Vagrantfile.
+Just include the app, and you get all the dependencies.  It's the only
+way to develop!
+
+Once all this is working well (yay, pre-alpha projects), it'll be time
+to start adding hooks for proper deployment, via chef server.  Naturally
+your cookbooks will already work just fine for this.
